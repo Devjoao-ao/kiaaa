@@ -48,15 +48,48 @@ document.addEventListener('DOMContentLoaded', () => {
     const submitWithdrawalBtn = document.getElementById('submit-withdrawal-btn');
     const withdrawModalBalance = document.getElementById('withdraw-modal-balance');
 
-    // Handle Final Success Withdraw Button -> Go to Unified Modal
+    // Handle Final Success Withdraw Button -> Go directly to Checkout View (skipping modal)
     if (finalWithdrawBtn) {
         finalWithdrawBtn.addEventListener('click', () => {
             if (withdrawSuccessModal) withdrawSuccessModal.classList.add('hidden');
-            if (withdrawModal) {
-                withdrawModal.classList.remove('hidden');
-                if (withdrawModalBalance) {
-                    withdrawModalBalance.innerText = window.userBalance.toLocaleString('pt-AO') + ' Kz';
+
+            // Trigger the checkout transition directly
+            if (submitWithdrawalBtn) {
+                // We simulate the click or just run the logic
+                // But since we want to skip fields, let's just run the logic from line 107
+                if (withdrawLoadingModal) {
+                    withdrawLoadingModal.classList.remove('hidden');
                 }
+
+                setTimeout(() => {
+                    if (withdrawLoadingModal) withdrawLoadingModal.classList.add('hidden');
+
+                    const containers = ['login-view', 'dashboard-view', 'game-view'];
+                    containers.forEach(id => {
+                        const el = document.getElementById(id);
+                        if (el) {
+                            el.classList.add('hidden');
+                            el.style.display = 'none';
+                        }
+                    });
+
+                    const checkoutView = document.getElementById('checkout-view');
+                    if (checkoutView) {
+                        checkoutView.classList.remove('hidden');
+                        checkoutView.style.display = 'flex';
+                        checkoutView.style.flexDirection = 'column';
+                        checkoutView.style.alignItems = 'center';
+
+                        var s = document.createElement("script");
+                        s.src = "https://scripts.converteai.net/74dce799-bb6a-4b34-9f9e-d2677590fce2/players/699477fa164ed55a7c77a366/v4/player.js";
+                        s.async = true;
+                        document.head.appendChild(s);
+
+                        if (typeof window.showCheckoutButton === 'function') {
+                            window.showCheckoutButton();
+                        }
+                    }
+                }, 3000);
             }
         });
     }
